@@ -5,40 +5,34 @@ const groq = new OpenAI({
   baseURL: "https://api.groq.com/openai/v1",
 });
 
-
 async function generateSummary(messages) {
   const chatText = messages
-    .map((m) => `${m.nickname}: ${m.text}`)
+    .map((message) => `${message.nickname}: ${message.text}`)
     .join("\n");
 
-  const prompt = `You are a helpful assistant. Summarize the
-   following chat conversation in a short, clear paragraph. 
-   Focus on key topics, decisions, and questions raised.\n\nChat:\n${chatText}\n\nSummary:`;
-
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
-    messages: [{ role: "user", content: prompt }],
-    temperature: 0.4,
+  const response = await groq.responses.create({
+    model: "openai/gpt-oss-20b",
+    input: `You are a helpful assistant. Summarize the following chat conversation in a short, clear paragraph.
+     Focus on key topics, decisions, and questions raised.\n\nChat:\n${chatText}\n\nSummary:`, 
   });
 
-  return response.choices[0].message.content.trim();
+  console.log(response);
+  return response.output_text;
 }
-
-
 async function searchMessages(query, messages) {
   const chatText = messages
-    .map((m, i) => `[${i}] ${m.nickname}: ${m.text}`)
+    .map((message) => `${message.nickname}: ${message.text}`)
     .join("\n");
 
-  const prompt = `You are a search assistant for a chatroom. Given the chat history below, answer the user's question using only information found in the messages. If relevant, mention who said it. If nothing relevant is found, say so.\n\nChat history:\n${chatText}\n\nQuestion: ${query}\n\nAnswer:`;
-
-  const response = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
-    messages: [{ role: "user", content: prompt }],
-    temperature: 0.3,
+  const response = await groq.responses.create({
+    model: "openai/gpt-oss-20b",
+    input: `Chat:\n${chatText}\n\nQuestion: ${query}\n\nAnswer the question using only the chat.`,
   });
 
-  return response.choices[0].message.content.trim();
+  return response.output_text;
 }
 
-module.exports = { generateSummary, searchMessages };
+module.exports = {
+  generateSummary,
+  searchMessages,
+};

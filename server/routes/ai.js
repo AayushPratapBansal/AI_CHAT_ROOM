@@ -3,7 +3,7 @@ const router = express.Router();
 const Message = require("../models/Message");
 const { generateSummary, searchMessages } = require("../ai");
 
-// POST /api/summary  -> summarize last 20-30 messages
+
 router.post("/summary", async (req, res) => {
   try {
     const data = await Message.find({})
