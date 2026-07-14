@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL || "http://localhost:5000";
-
+console.log("SERVER_URL =", SERVER_URL);
 function SummaryBox() {
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
